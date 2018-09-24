@@ -1,18 +1,18 @@
 //https://developers.google.com/gmail/api/v1/reference/
 //https://developers.google.com/gmail/api/auth/scopes
-const fs = require('fs');
-const readline = require('readline');
-const { google } = require('googleapis');
+const fs = require("fs");
+const readline = require("readline");
+const { google } = require("googleapis");
 const { OAuth2Client } = require("google-auth-library");
-const util = require('util');
+const util = require("util");
 const readFilePromise = util.promisify(fs.readFile);
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/gmail-nodejs-quickstart.json
-const SCOPES = ['https://mail.google.com/'];
+const SCOPES = ["https://mail.google.com/"];
 const TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
-  process.env.USERPROFILE) + '/.credentials/';
-const TOKEN_PATH = TOKEN_DIR + 'gmail-nodejs-quickstart.json';
-const SECRET_PATH = process.cwd() + '/src/utility/client_secret.json';
+  process.env.USERPROFILE) + "/.credentials/";
+const TOKEN_PATH = TOKEN_DIR + "gmail-nodejs-quickstart.json";
+const SECRET_PATH = process.cwd() + "/src/utility/client_secret.json";
 
 /**
  * Asynchronously calls gmail API to authorize, read and delete mail.
@@ -63,7 +63,7 @@ class Email {
   getNewToken(oauth2Client) {
     return new Promise((resolve, reject) => {
       const authUrl = oauth2Client.generateAuthUrl({
-        access_type: 'offline',
+        access_type: "offline",
         scope: SCOPES
       });
       console.log("Authorize this app by visiting this url: ", authUrl);
@@ -79,7 +79,7 @@ class Email {
             reject(err);
           }
           oauth2Client.credentials = token;
-          resolve(oauth2Client)
+          resolve(oauth2Client);
         });
       });
     });
@@ -94,7 +94,7 @@ class Email {
     try {
       fs.mkdirSync(TOKEN_DIR);
     } catch (err) {
-      if (err.code != 'EEXIST') {
+      if (err.code != "EEXIST") {
         throw err;
       }
     }
@@ -108,13 +108,13 @@ class Email {
   deleteToken() {
     try {
       if (fs.existsSync(TOKEN_PATH)) {
-        fs.unlinkSync(TOKEN_PATH)
+        fs.unlinkSync(TOKEN_PATH);
         console.log("Token deleted: " + TOKEN_PATH);
       } else {
-        console.log("no token found at: " + TOKEN_PATH)
+        console.log("no token found at: " + TOKEN_PATH);
       }
     } catch (err) {
-      if (err.code != 'EEXIST') {
+      if (err.code != "EEXIST") {
         throw err;
       }
     }
@@ -128,10 +128,10 @@ class Email {
    */
   listMail(auth) {
     return new Promise((resolve, reject) => {
-      let gmail = google.gmail('v1');
+      let gmail = google.gmail("v1");
       gmail.users.messages.list({
         auth: auth,
-        userId: 'me',
+        userId: "me",
       }, function (err, response) {
         if (err) {
           reject(err);
@@ -150,12 +150,12 @@ class Email {
    */
   readMail(auth, id) {
     return new Promise((resolve, reject) => {
-      let gmail = google.gmail('v1');
+      let gmail = google.gmail("v1");
       gmail.users.messages.get({
         auth: auth,
-        userId: 'me',
+        userId: "me",
         id: id,
-        format: 'full',
+        format: "full",
       }, function (err, response) {
         if (err) {
           reject(err);
@@ -163,7 +163,7 @@ class Email {
         if (!response.data.payload.parts[0].body.data) {
           reject(new Error("Do not support message type. Only text messages."));
         } else {
-          resolve(Buffer.from(response.data.payload.parts[0].body.data, 'base64').toString('ascii'));
+          resolve(Buffer.from(response.data.payload.parts[0].body.data, "base64").toString("ascii"));
         }
       });
     });
@@ -177,10 +177,10 @@ class Email {
    */
   deleteMail(auth, id) {
     return new Promise((resolve, reject) => {
-      let gmail = google.gmail('v1');
+      let gmail = google.gmail("v1");
       gmail.users.messages.delete({
         auth: auth,
-        userId: 'me',
+        userId: "me",
         id: id,
       }, function (err, response) {
         if (err) {
@@ -243,7 +243,7 @@ class Email {
               }).catch((err) => {
                 reject(err);
               });
-            };
+            }
           }).catch((err) => {
             reject(err);
           });
