@@ -19,11 +19,11 @@ Then(/^I should not see unexpected question$/, () => {
 
 Given(/^I delete all email$/, () => {
   return new Promise((resolve, reject) => {
-      Email.deleteAllMail().then(() => {
-        resolve(true);
-      }).catch((err) => {
-        reject(new Error(err));
-      });
+    Email.deleteAllMail().then(() => {
+      resolve(true);
+    }).catch((err) => {
+      reject(new Error(err));
+    });
   });
 });
 

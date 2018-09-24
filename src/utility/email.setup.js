@@ -4,19 +4,19 @@
 
 //https://developers.google.com/gmail/api/v1/reference/
 //https://developers.google.com/gmail/api/auth/scopes
-const fs = require('fs');
-const readline = require('readline');
-const { google } = require('googleapis');
+const fs = require("fs");
+const readline = require("readline");
+const { google } = require("googleapis");
 const { OAuth2Client } = require("google-auth-library");
-const util = require('util');
+const util = require("util");
 const readFilePromise = util.promisify(fs.readFile);
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/gmail-nodejs-quickstart.json
-const SCOPES = ['https://mail.google.com/'];
+const SCOPES = ["https://mail.google.com/"];
 const TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
-  process.env.USERPROFILE) + '/.credentials/';
-const TOKEN_PATH = TOKEN_DIR + 'gmail-nodejs-quickstart.json';
-const SECRET_PATH = process.cwd() + '/src/utility/client_secret.json';
+  process.env.USERPROFILE) + "/.credentials/";
+const TOKEN_PATH = TOKEN_DIR + "gmail-nodejs-quickstart.json";
+const SECRET_PATH = process.cwd() + "/src/utility/client_secret.json";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -25,19 +25,19 @@ const rl = readline.createInterface({
 
 rl.question("c or create to generate token. d or delete to delete token. anything else to exit.\n", function (response) {
   switch (response.trim().toLowerCase()) {
-    case 'c':
-    case 'create':
-      authorizePromise().then(() => {
-        console.log("Authorized");
-      }).catch((err) => {
-        console.log("error in authorize: " + err);
-      });
-      break;
-    case 'd':
-    case 'delete':
-      deleteToken();
-      break;
-    default: break;
+  case "c":
+  case "create":
+    authorizePromise().then(() => {
+      console.log("Authorized");
+    }).catch((err) => {
+      console.log("error in authorize: " + err);
+    });
+    break;
+  case "d":
+  case "delete":
+    deleteToken();
+    break;
+  default: break;
   }
   rl.close();
 });
@@ -85,7 +85,7 @@ function authorizePromise() {
 function getNewTokenPromise(oauth2Client) {
   return new Promise((resolve, reject) => {
     const authUrl = oauth2Client.generateAuthUrl({
-      access_type: 'offline',
+      access_type: "offline",
       scope: SCOPES
     });
     console.log("Authorize this app by visiting this url: ", authUrl);
@@ -101,7 +101,7 @@ function getNewTokenPromise(oauth2Client) {
           reject(err);
         }
         oauth2Client.credentials = token;
-        resolve(oauth2Client)
+        resolve(oauth2Client);
       });
     });
   });
@@ -116,7 +116,7 @@ function storeToken(token) {
   try {
     fs.mkdirSync(TOKEN_DIR);
   } catch (err) {
-    if (err.code != 'EEXIST') {
+    if (err.code != "EEXIST") {
       throw err;
     }
   }
@@ -130,13 +130,13 @@ function storeToken(token) {
 function deleteToken() {
   try {
     if (fs.existsSync(TOKEN_PATH)) {
-      fs.unlinkSync(TOKEN_PATH)
+      fs.unlinkSync(TOKEN_PATH);
       console.log("Token deleted: " + TOKEN_PATH);
     } else {
-      console.log("no token found at: " + TOKEN_PATH)
+      console.log("no token found at: " + TOKEN_PATH);
     }
   } catch (err) {
-    if (err.code != 'EEXIST') {
+    if (err.code != "EEXIST") {
       throw err;
     }
   }

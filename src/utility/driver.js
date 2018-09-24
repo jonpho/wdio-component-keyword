@@ -13,9 +13,9 @@ class Driver {
    * @returns True if capability is mobile.
    */
   isMobile() {
-    return process.env.CAPABILITY.includes('android') ||
-      process.env.CAPABILITY.includes('iphone') ||
-      process.env.CAPABILITY.includes('Mobile');
+    return process.env.CAPABILITY.includes("android") ||
+      process.env.CAPABILITY.includes("iphone") ||
+      process.env.CAPABILITY.includes("Mobile");
   }
 
   /**
@@ -23,7 +23,7 @@ class Driver {
   * @returns True if capability is android.
   */
   isAndroid() {
-    return process.env.CAPABILITY.includes('android');
+    return process.env.CAPABILITY.includes("android");
   }
 
   /**
@@ -41,7 +41,7 @@ class Driver {
   triggerJQueryEvent(element, event) {
     browser.waitForVisible(element);
     browser.waitForEnabled(element);
-    browser.execute('$("' + element + '").trigger("' + event + '")');
+    browser.execute("$(\"" + element + "\").trigger(\"" + event + "\")");
   }
 
   /**
@@ -54,7 +54,7 @@ class Driver {
     elements = browser.elements(locator);
     for (i = 0; i < elements.length; i++) {
       if (elements[i].value.contains(text)) {
-        elements[i].click()
+        elements[i].click();
       }
     }
   }
@@ -73,7 +73,7 @@ class Driver {
       } catch (error) {
         //don't care
       }
-    })
+    });
   }
 
 
@@ -246,9 +246,9 @@ class Driver {
           }
         } catch (error) {
         }
-      })
+      });
       return elText !== "";
-    }, timeout, 'Waited for text timeout', 2000);
+    }, timeout, "Waited for text timeout", 2000);
     return elText;
   }
 

@@ -9,26 +9,26 @@ let filesWithTags = "";
 
 //Filter out feature files that don't have specified tags, this prevents unnecessary loading of browser driver
 if (process.env.TAG && process.env.TAG !== "" && process.env.TAG !== "@All") {
-  const expressionNode = process.env.TAG.match(/(@\w+)/g) || []
+  const expressionNode = process.env.TAG.match(/(@\w+)/g) || [];
   filesWithTags = glob.sync(featuresPath).map((file) => {
-    const content = fs.readFileSync(file, 'utf8')
+    const content = fs.readFileSync(file, "utf8");
     var found = false;
     if (content.length > 0) {
-      const tagsInFile = content.match(/(@\w+)/g) || []
+      const tagsInFile = content.match(/(@\w+)/g) || [];
       tagsInFile.forEach(t => {
         expressionNode.forEach(e => {
           if (e == t) {
             found = true;
           }
-        })
-      })
+        });
+      });
     }
     if (found) {
       return file;
     } else {
-      return null
+      return null;
     }
-  }).filter(x => x != null)
+  }).filter(x => x != null);
 }
 
 exports.config = {
@@ -84,7 +84,7 @@ exports.config = {
       outputDir: "./results"
     },
     allure: {
-      outputDir: './results/allure/',
+      outputDir: "./results/allure/",
       disableWebdriverStepsReporting: false,
       useCucumberStepReporter: true
     }
@@ -93,24 +93,24 @@ exports.config = {
   // WebDriverIO specific hooks
   onPrepare: function (config, capabilities) {
     //cleanup existing screenshots before run
-    const path = require('path');
+    const path = require("path");
     var deletePath = path.resolve("./results");
     deleteFolderRecursive(deletePath);
     // Deals with All tag 
     if (process.env.TAG === "@All") {
-      process.env.TAG = ""
+      process.env.TAG = "";
     }
     // Spawns 32 bit process for IE11
-    if (JSON.stringify(capabilities).includes('internet explorer')) {
-      const cp = require('child_process');
-      cp.execSync('node selenium-standalone install --config=../../../config.ie.js',
-        { cwd: './node_modules/selenium-standalone/bin' }
+    if (JSON.stringify(capabilities).includes("internet explorer")) {
+      const cp = require("child_process");
+      cp.execSync("node selenium-standalone install --config=../../../config.ie.js",
+        { cwd: "./node_modules/selenium-standalone/bin" }
       );
-      let seleniumSpawn = cp.spawn('node', ['selenium-standalone', 'start', '--config=../../../config.ie.js'],
-        { cwd: './node_modules/selenium-standalone/bin' }
+      let seleniumSpawn = cp.spawn("node", ["selenium-standalone", "start", "--config=../../../config.ie.js"],
+        { cwd: "./node_modules/selenium-standalone/bin" }
       );
       //keep the spawn alive
-      seleniumSpawn.stderr.on('data', function (data) { });
+      seleniumSpawn.stderr.on("data", function (data) { });
     }
   },
   beforeSession: function (config, capabilities, specs) { },
@@ -132,9 +132,9 @@ exports.config = {
   onComplete: function (exitCode, config, capabilities) {
     // TODO: Remove after wdio update resolves cleanup of rouge procs
     // clean up drivers
-    const cp = require('child_process');
-    if (process.platform === 'win32') {
-      let lines = cp.execSync('tasklist').toString().trim().split("\n");
+    const cp = require("child_process");
+    if (process.platform === "win32") {
+      let lines = cp.execSync("tasklist").toString().trim().split("\n");
       //remove the table headers    
       let processes = lines.slice(2);
       //match the process name and ID
@@ -147,14 +147,14 @@ exports.config = {
       //try and kill all processes filtered
       filtered.forEach(proc => {
         try {
-          cp.execSync('taskkill /PID ' + proc.split(" ").filter(i => i)[1] + ' /F');
+          cp.execSync("taskkill /PID " + proc.split(" ").filter(i => i)[1] + " /F");
         } catch (error) { }
       });
     } else {
-      shell.exec('kill -9 $(pgrep chromedriver)', { silent: true });
-      shell.exec('kill -9 $(pgrep geckodriver)', { silent: true });
+      shell.exec("kill -9 $(pgrep chromedriver)", { silent: true });
+      shell.exec("kill -9 $(pgrep geckodriver)", { silent: true });
     }
-    cp.execSync('allure generate .', { cwd: './results/allure' });
+    cp.execSync("allure generate .", { cwd: "./results/allure" });
   },
 
   // Cucumber specific hooks
@@ -162,7 +162,7 @@ exports.config = {
   beforeScenario: function (scenario) {
     // reload with fresh browser each time, 
     // delay is added to prevent errors of browser reloading while taking fail screenshot
-    testCount++
+    testCount++;
     if (testCount > 1) {
       browser.pause(2000);
       browser.reload();
@@ -177,24 +177,24 @@ exports.config = {
 };
 
 function getCapability() {
-  if (process.env.CAPABILITY.includes('multiDesktop')) {
-    return [require("./capabilities.json")['chrome'],
-    require("./capabilities.json")['firefox']]
-  } else if (process.env.CAPABILITY.includes('multiMobile')) {
-    return [require("./capabilities.json")['iPhoneSimulator'],
-    require("./capabilities.json")['androidEmulator']]
+  if (process.env.CAPABILITY.includes("multiDesktop")) {
+    return [require("./capabilities.json")["chrome"],
+      require("./capabilities.json")["firefox"]];
+  } else if (process.env.CAPABILITY.includes("multiMobile")) {
+    return [require("./capabilities.json")["iPhoneSimulator"],
+      require("./capabilities.json")["androidEmulator"]];
   } else {
-    return [capability]
+    return [capability];
   }
 }
 
 function takeScreenshot(stepResult) {
   if (stepResult.status == "failed") {
-    const path = require('path');
+    const path = require("path");
     let shotPath = exports.config.screenshotPath;
     let scenarioName = stepResult.step.scenario.name
       .split(":")[0]
-      .replace(/ /g, '');
+      .replace(/ /g, "");
     let fileName = scenarioName + "_" + process.env.CAPABILITY + Date.now() + ".png";
     const resolvedPath = path.resolve(shotPath, fileName);
     const dir = path.dirname(resolvedPath);
@@ -206,10 +206,10 @@ function takeScreenshot(stepResult) {
 }
 
 function mkDirByPathSync(targetDir, { isRelativeToScript = false } = {}) {
-  const path = require('path');
+  const path = require("path");
   const sep = path.sep;
-  const initDir = path.isAbsolute(targetDir) ? sep : '';
-  const baseDir = isRelativeToScript ? __dirname : '.';
+  const initDir = path.isAbsolute(targetDir) ? sep : "";
+  const baseDir = isRelativeToScript ? __dirname : ".";
 
   targetDir.split(sep).reduce((parentDir, childDir) => {
     const curDir = path.resolve(baseDir, parentDir, childDir);
@@ -222,7 +222,7 @@ function mkDirByPathSync(targetDir, { isRelativeToScript = false } = {}) {
 }
 
 function deleteFolderRecursive(deletePath) {
-  const path = require('path');
+  const path = require("path");
   if (fs.existsSync(deletePath)) {
     fs.readdirSync(deletePath).forEach(function (file, index) {
       var curPath = path.resolve(deletePath, file);
@@ -234,4 +234,4 @@ function deleteFolderRecursive(deletePath) {
     });
     fs.rmdirSync(deletePath);
   }
-};
+}

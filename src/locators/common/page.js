@@ -5,9 +5,9 @@
  */
 class Page {
   constructor() {
-    title: "";
-    url: "";
-    pageObjects: "";
+    "";
+    "";
+    "";
   }
 
   /**
