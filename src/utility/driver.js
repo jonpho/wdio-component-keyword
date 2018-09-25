@@ -51,8 +51,8 @@ class Driver {
    * @param {*} text Text to find in element to click
    */
   clickElementWithText(locator, text) {
-    elements = browser.elements(locator);
-    for (i = 0; i < elements.length; i++) {
+    let elements = browser.elements(locator);
+    for (let i = 0; i < elements.length; i++) {
       if (elements[i].value.contains(text)) {
         elements[i].click();
       }
@@ -245,6 +245,7 @@ class Driver {
             elText = el.getText();
           }
         } catch (error) {
+          //Leaving Block Empty
         }
       });
       return elText !== "";
