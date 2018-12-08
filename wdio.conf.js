@@ -46,7 +46,7 @@ exports.config = {
   port: capability.port,
   maxInstances: 1,
   capabilities: getCapability(),
-  services: ["selenium-standalone"],
+  services: [getServiceType()],
   seleniumLogs: "/logs/selenium.log",
   logLevel: "silent",
   coloredLogs: true,
@@ -54,6 +54,14 @@ exports.config = {
   screenshotPath: "./results/screenshots/",
   screenshotOnReject: true,
   waitforTimeout: 60000,
+  dockerOptions: {
+    image: "selenium/standalone-chrome",
+    healthCheck: "http://localhost:4444",
+    options: {
+      p: ["4444:4444"],
+      shmSize: "2g"
+    }
+  },
   framework: "cucumber",
   cucumberOpts: {
     require: ["./test/common/steps/*",
@@ -175,6 +183,16 @@ exports.config = {
   afterScenario: function (scenario) { },
   afterFeature: function (feature) { }
 };
+
+function getServiceType() {
+  if (process.env.SERVICE == "docker") {
+    console.log(process.env.SERVICE);
+    return "docker";
+  } else {
+    console.log(process.env.SERVICE);
+    return "selenium-standalone";
+  }
+}
 
 function getCapability() {
   if (process.env.CAPABILITY.includes("multiDesktop")) {
