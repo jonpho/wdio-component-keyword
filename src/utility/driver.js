@@ -182,7 +182,7 @@ class Driver {
   loadUrl(url) {
     browser.url(url);
     if (!this.isMobile()) {
-      browser.windowHandleMaximize();
+      browser.windowHandleSize({width: 800, height: 600});
     }
   }
 
