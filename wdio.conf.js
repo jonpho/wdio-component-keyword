@@ -1,7 +1,6 @@
 const capability = require("./capabilities.json")[process.env.CAPABILITY];
 const chai = require("chai");
 const shell = require("shelljs");
-let testCount = 0;
 const glob = require("glob");
 const fs = require("fs");
 const featuresPath = "./test/Product/features/*.feature";
@@ -47,7 +46,7 @@ exports.config = {
   maxInstances: 1,
   capabilities: getCapability(),
   services: ["selenium-standalone"],
-  seleniumLogs: "/logs/selenium.log",
+  seleniumLogs: "./logs",
   logLevel: "silent",
   coloredLogs: true,
   bail: 0,
@@ -162,11 +161,11 @@ exports.config = {
   beforeScenario: function (scenario) {
     // reload with fresh browser each time, 
     // delay is added to prevent errors of browser reloading while taking fail screenshot
-    testCount++;
-    if (testCount > 1) {
-      browser.pause(2000);
-      browser.reload();
-    }
+    // testCount++;
+    // if (testCount > 1) {
+    //   browser.pause(2000);
+    //   browser.reload();
+    // }
   },
   beforeStep: function (step) { },
   afterStep: function afterStep(stepResult) {
@@ -192,7 +191,7 @@ function takeScreenshot(stepResult) {
   if (stepResult.status == "failed") {
     const path = require("path");
     let shotPath = exports.config.screenshotPath;
-    let scenarioName = stepResult.step.scenario.name
+    let scenarioName = stepResult.scenario
       .split(":")[0]
       .replace(/ /g, "");
     let fileName = scenarioName + "_" + process.env.CAPABILITY + Date.now() + ".png";
