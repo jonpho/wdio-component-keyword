@@ -69,10 +69,11 @@
       }
     },
     "chrome": {
-      "command": "wdio wdio.conf.js --host localhost",
+      "command": "wdio wdio.conf.js",
       "description": "Chrome on local machine",
       "env": {
-        "CAPABILITY": "chrome"
+        "CAPABILITY": "chrome",
+        "HOSTINFO": "localhost"
       }
     },
     "firefox": {
