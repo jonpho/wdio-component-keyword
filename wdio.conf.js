@@ -4,6 +4,10 @@ const shell = require("shelljs");
 const glob = require("glob");
 const fs = require("fs");
 const featuresPath = "./test/Product/features/*.feature";
+const hostInfo = require("./capabilities.json").service[process.env.HOSTINFO].hostInfo.host;
+const pathInfo = require("./capabilities").service[process.env.HOSTINFO].hostInfo.path;
+const portInfo = require("./capabilities").service[process.env.HOSTINFO].hostInfo.port;
+const serviceTypeInfo = require("./capabilities").service[process.env.HOSTINFO].serviceType;
 let filesWithTags = "";
 
 //Filter out feature files that don't have specified tags, this prevents unnecessary loading of browser driver
@@ -34,18 +38,18 @@ exports.config = {
   //uncomment below lines to debug wdio.config.js
   //debug: true,
   //execArgv: ['--inspect=127.0.0.1:5859'],
-  host: "localhost",
-  path: "/wd/hub",
+  host: hostInfo,
+  path: pathInfo,
+  port: portInfo,
   specs: filesWithTags ? filesWithTags : featuresPath,
   exclude: [],
   suites: {
     foo: [""]
   },
   // TODO: Fork wdio to allow multiple ports
-  port: capability.port,
   maxInstances: 1,
   capabilities: getCapability(),
-  services: ["selenium-standalone"],
+  services: [serviceTypeInfo],
   seleniumLogs: "./logs",
   logLevel: "silent",
   coloredLogs: true,
@@ -74,6 +78,8 @@ exports.config = {
     timeout: 70000,
     tags: []
   },
+  dockerLogs: "./logs",
+  dockerOptions: getDockerOptions(),
   reporters: ["cucumber", "json", "junit", "allure"],
   reporterOptions: {
     junit: {
@@ -184,6 +190,14 @@ function getCapability() {
       require("./capabilities.json")["androidEmulator"]];
   } else {
     return [capability];
+  }
+}
+
+function getDockerOptions() {
+  if (process.env.HOSTINFO === "docker") {
+    return require("./capabilities.json").service.docker.dockerOptions;
+  } else {
+    return "";
   }
 }
 

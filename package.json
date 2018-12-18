@@ -30,6 +30,7 @@
     "wdio-allure-reporter": "^0.8.3",
     "wdio-cucumber-framework": "^2.2.8",
     "wdio-cucumber-reporter": "0.0.2",
+    "wdio-docker-service": "^1.5.0",
     "wdio-json-reporter": "^0.4.0",
     "wdio-junit-reporter": "^0.4.4",
     "wdio-selenium-standalone-service": "^0.0.12",
@@ -69,10 +70,19 @@
       }
     },
     "chrome": {
-      "command": "wdio wdio.conf.js --host localhost",
+      "command": "wdio wdio.conf.js",
       "description": "Chrome on local machine",
       "env": {
-        "CAPABILITY": "chrome"
+        "CAPABILITY": "chrome",
+        "HOSTINFO": "localhost"
+      }
+    },
+    "dockerChrome": {
+      "command": "wdio wdio.conf.js",
+      "description": "Chrome on local machine",
+      "env": {
+        "CAPABILITY": "chrome",
+        "HOSTINFO": "docker"
       }
     },
     "firefox": {
