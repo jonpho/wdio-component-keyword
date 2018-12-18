@@ -78,6 +78,8 @@ exports.config = {
     timeout: 70000,
     tags: []
   },
+  dockerLogs: "./logs",
+  dockerOptions: getDockerOptions(),
   reporters: ["cucumber", "json", "junit", "allure"],
   reporterOptions: {
     junit: {
@@ -191,9 +193,11 @@ function getCapability() {
   }
 }
 
-function getServiceType() {
-  if (process.env.HOSTINFO === "localhost") {
-    return require("./capabilities.json").service.localhost.serviceType;
+function getDockerOptions() {
+  if (process.env.HOSTINFO === "docker") {
+    return require("./capabilities.json").service.docker.dockerOptions;
+  } else {
+    return "";
   }
 }
 
